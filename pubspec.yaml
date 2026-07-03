@@ -1,0 +1,39 @@
+name: pinballplunge
+description: "Pinball Plunge - a neon casual arcade color-match game."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.12.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+  webview_flutter: ^4.10.0
+  shared_preferences: ^2.3.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.14.1
+
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: "assets/generated/icon_full.png"
+  adaptive_icon_background: "#0B0B2E"
+  adaptive_icon_foreground: "assets/generated/icon_foreground.png"
+  min_sdk_android: 21
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/generated/
+    - assets/Pinball_Plunge_additional_assets/
+    - assets/Pinball_Plunge_gameplay_assets/
