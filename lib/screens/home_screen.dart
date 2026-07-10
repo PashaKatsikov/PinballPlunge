@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../game_config.dart';
+import '../config/legal_links.dart';
+import '../media_library.dart';
 import '../services/storage.dart';
 import 'game_screen.dart';
 import 'web_view_screen.dart';
-
-const String kPrivacyUrl = 'https://pinballplunge.com/privacy-policy.html';
-const String kSupportUrl = 'https://pinballplunge.com/support.html';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -55,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen>
       body: Stack(
         fit: StackFit.expand,
         children: <Widget>[
-          Image.asset(Assets.bg2, fit: BoxFit.cover),
+          Image.asset(MediaLibrary.bg2, fit: BoxFit.cover),
           const DecoratedBox(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -74,7 +72,8 @@ class _HomeScreenState extends State<HomeScreen>
                   Expanded(
                     flex: 5,
                     child: Center(
-                      child: Image.asset(Assets.gameName, fit: BoxFit.contain),
+                      child: Image.asset(MediaLibrary.gameName,
+                          fit: BoxFit.contain),
                     ),
                   ),
                   Expanded(
@@ -198,7 +197,7 @@ class _HomeScreenState extends State<HomeScreen>
         _SmallButton(
           icon: Icons.privacy_tip_outlined,
           label: 'Privacy Policy',
-          onTap: () => _openWeb('Privacy Policy', kPrivacyUrl),
+          onTap: () => _openWeb('Privacy Policy', kPrivacyPolicyUrl),
         ),
         const SizedBox(width: 16),
         _SmallButton(

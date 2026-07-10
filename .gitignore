@@ -49,6 +49,9 @@ app.*.map.json
 *.keystore
 android/key.properties
 
+# Firebase — real config is provisioned per project
+android/app/google-services.json
+
 # Temp
 build_log.txt
 _tmp_preview/

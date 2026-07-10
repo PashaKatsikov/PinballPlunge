@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:pinballplunge/game_config.dart';
+import 'package:pinball_plunge_shell/media_library.dart';
 
 void main() {
   test('wheel sectors and ball sprites stay in sync', () {
-    expect(GameColors.sectors.length, Assets.balls.length);
-    expect(GameColors.sectors.length, 6);
+    expect(WheelPalette.sectors.length, MediaLibrary.balls.length);
+    expect(WheelPalette.sectors.length, 6);
   });
 }

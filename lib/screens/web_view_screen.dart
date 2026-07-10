@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-import '../game_config.dart';
+import '../media_library.dart';
 
 class WebViewScreen extends StatefulWidget {
   const WebViewScreen({

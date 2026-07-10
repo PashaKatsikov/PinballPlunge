@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Network security config. Cleartext traffic is allowed at the base level
+    because some partner cashier / OAuth intermediaries redirect through
+    http:// URLs before landing on the final https endpoint. When we ship
+    with a known-good partner in production, this should be tightened to a
+    per-domain whitelist (see .cursor/rules/gray_part_pitfalls.md §17).
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

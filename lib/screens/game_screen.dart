@@ -3,7 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
-import '../game_config.dart';
+import '../media_library.dart';
 import '../services/storage.dart';
 
 enum _BallPhase { idle, flying }
@@ -48,8 +48,8 @@ class _GameScreenState extends State<GameScreen>
   @override
   void initState() {
     super.initState();
-    _ballColor = _rng.nextInt(GameColors.count);
-    _nextBallColor = _rng.nextInt(GameColors.count);
+    _ballColor = _rng.nextInt(WheelPalette.count);
+    _nextBallColor = _rng.nextInt(WheelPalette.count);
     _ticker = createTicker(_onTick)..start();
   }
 
@@ -89,7 +89,7 @@ class _GameScreenState extends State<GameScreen>
     final double deg = _wheelAngle * 180 / math.pi;
     double effective = (180 - deg) % 360;
     if (effective < 0) effective += 360;
-    return (effective ~/ 60) % GameColors.count;
+    return (effective ~/ 60) % WheelPalette.count;
   }
 
   void _launch() {
@@ -113,7 +113,7 @@ class _GameScreenState extends State<GameScreen>
         _direction = -_direction;
       }
       _ballColor = _nextBallColor;
-      _nextBallColor = _rng.nextInt(GameColors.count);
+      _nextBallColor = _rng.nextInt(WheelPalette.count);
       _phase = _BallPhase.idle;
       _ballT = 0;
     } else {
@@ -142,8 +142,8 @@ class _GameScreenState extends State<GameScreen>
       _hits = 0;
       _gameOver = false;
       _hitFlash = 0;
-      _ballColor = _rng.nextInt(GameColors.count);
-      _nextBallColor = _rng.nextInt(GameColors.count);
+      _ballColor = _rng.nextInt(WheelPalette.count);
+      _nextBallColor = _rng.nextInt(WheelPalette.count);
     });
   }
 
@@ -153,7 +153,7 @@ class _GameScreenState extends State<GameScreen>
       body: Stack(
         fit: StackFit.expand,
         children: <Widget>[
-          Image.asset(Assets.bg1, fit: BoxFit.cover),
+          Image.asset(MediaLibrary.bg1, fit: BoxFit.cover),
           const DecoratedBox(
             decoration: BoxDecoration(color: Color(0x330B0B2E)),
           ),
@@ -186,7 +186,7 @@ class _GameScreenState extends State<GameScreen>
     // Ball travels straight up from the launcher to the wheel's bottom edge.
     final double ballY = _lerp(launchY, wheelBottomY, _ballT);
 
-    final Color targetColor = GameColors.sectors[_targetSector()];
+    final Color targetColor = WheelPalette.sectors[_targetSector()];
 
     return Stack(
       children: <Widget>[
@@ -202,8 +202,8 @@ class _GameScreenState extends State<GameScreen>
                 begin: Alignment.bottomCenter,
                 end: Alignment.topCenter,
                 colors: <Color>[
-                  GameColors.sectors[_ballColor].withValues(alpha: 0.0),
-                  GameColors.sectors[_ballColor].withValues(alpha: 0.35),
+                  WheelPalette.sectors[_ballColor].withValues(alpha: 0.0),
+                  WheelPalette.sectors[_ballColor].withValues(alpha: 0.35),
                 ],
               ),
             ),
@@ -235,7 +235,7 @@ class _GameScreenState extends State<GameScreen>
                   gradient: RadialGradient(
                     colors: <Color>[
                       Colors.white.withValues(alpha: 0.9),
-                      GameColors.sectors[_ballColor].withValues(alpha: 0.0),
+                      WheelPalette.sectors[_ballColor].withValues(alpha: 0.0),
                     ],
                   ),
                 ),
@@ -251,7 +251,7 @@ class _GameScreenState extends State<GameScreen>
           height: wheelDiameter,
           child: Transform.rotate(
             angle: _wheelAngle,
-            child: Image.asset(Assets.wheel, fit: BoxFit.contain),
+            child: Image.asset(MediaLibrary.wheel, fit: BoxFit.contain),
           ),
         ),
 
@@ -261,7 +261,7 @@ class _GameScreenState extends State<GameScreen>
           top: ballY - ballRadius,
           width: ballRadius * 2,
           height: ballRadius * 2,
-          child: Image.asset(Assets.balls[_ballColor], fit: BoxFit.contain),
+          child: Image.asset(MediaLibrary.balls[_ballColor], fit: BoxFit.contain),
         ),
 
         // Next-ball preview near the launcher.
@@ -285,7 +285,7 @@ class _GameScreenState extends State<GameScreen>
                 width: ballRadius * 1.1,
                 height: ballRadius * 1.1,
                 child: Image.asset(
-                  Assets.balls[_nextBallColor],
+                  MediaLibrary.balls[_nextBallColor],
                   fit: BoxFit.contain,
                 ),
               ),

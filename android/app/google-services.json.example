@@ -1,0 +1,18 @@
+{
+  "_comment": "Placeholder. When Firebase is provisioned for Pinball Plunge, drop the real google-services.json from Firebase Console → Project Settings → Android app next to this file (never commit the real one to a public repo). Bundle id in the real file MUST equal com.pinplunge.pinballplunge.",
+  "project_info": {
+    "project_number": "000000000000",
+    "project_id": "pinball-plunge",
+    "storage_bucket": "pinball-plunge.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:000000000000:android:0000000000000000000000",
+        "android_client_info": { "package_name": "com.pinplunge.pinballplunge" }
+      },
+      "api_key": [ { "current_key": "REPLACE_ME" } ]
+    }
+  ],
+  "configuration_version": "1"
+}
