@@ -15,9 +15,10 @@ class Insight {
 
   static ClarityConfig get config => ClarityConfig(
         projectId: kClarityProjectId,
-        // Use LogLevel.Verbose while wiring a new project to debug
-        // initialization issues. Switch to LogLevel.None before release.
-        logLevel: LogLevel.None,
+        // Verbose while wiring the project so `adb logcat -s Clarity` shows
+        // "session uploaded / HTTP 204". Switch to LogLevel.None once the
+        // Clarity dashboard confirms the first sessions.
+        logLevel: LogLevel.Verbose,
       );
 
   /// Group the session by AppsFlyer id and attach attribution tags.
