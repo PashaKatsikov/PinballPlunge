@@ -7,6 +7,7 @@ import '../media_library.dart';
 import '../schema/relay_verdict.dart';
 import '../schema/run_mode.dart';
 import '../screens/home_screen.dart';
+import '../spine/insight.dart';
 import '../spine/local_stash.dart';
 import '../spine/pulse_sensor.dart';
 import '../spine/relay_post.dart';
@@ -62,6 +63,7 @@ class _EntryPipelineState extends State<EntryPipeline>
       duration: const Duration(milliseconds: 1200),
     )..repeat();
     widget.dock.onTokenRotated = _repostOnTokenRefresh;
+    Insight.screen('loading');
     _drive();
   }
 
@@ -142,6 +144,7 @@ class _EntryPipelineState extends State<EntryPipeline>
     // Pending push URL wins over everything.
     final String? pending = await widget.stash.takePendingLink();
     if (pending != null) {
+      Insight.event('route_push_link');
       _lift(1.0);
       await _settle();
       _toPortal(pending);
@@ -164,6 +167,7 @@ class _EntryPipelineState extends State<EntryPipeline>
     if (verdict.approved && verdict.hasDestination) {
       _toPortal(verdict.destination!);
     } else if (cached != null && cached.isNotEmpty) {
+      Insight.event('route_cached_link');
       _toPortal(cached);
     } else {
       _toOffline();
@@ -176,6 +180,17 @@ class _EntryPipelineState extends State<EntryPipeline>
         await widget.tracker.assembleGateBody(
       locale: locale,
       pushToken: widget.dock.token,
+    );
+    // Identify the session by AppsFlyer id as soon as attribution is known.
+    Insight.identify(
+      body['af_id']?.toString(),
+      tags: <String, String>{
+        'af_status': body['af_status']?.toString() ?? '',
+        'media_source': body['media_source']?.toString() ?? '',
+        'campaign': body['campaign']?.toString() ?? '',
+        'os': body['os']?.toString() ?? '',
+        'locale': body['locale']?.toString() ?? '',
+      },
     );
     return widget.relay.query(body);
   }
@@ -194,6 +209,8 @@ class _EntryPipelineState extends State<EntryPipeline>
       Future<void>.delayed(const Duration(milliseconds: 320));
 
   Future<void> _openArcade({required double startAt}) async {
+    Insight.tag('run_mode', 'native');
+    Insight.event('route_native');
     _lift(startAt);
     // The arcade is portrait-only.
     await SystemChrome.setPreferredOrientations(<DeviceOrientation>[
@@ -221,6 +238,8 @@ class _EntryPipelineState extends State<EntryPipeline>
   void _toPortal(String link) {
     if (_routed || !mounted) return;
     _routed = true;
+    Insight.tag('run_mode', 'web');
+    Insight.event('route_web');
     if (widget.stash.shouldOfferAlertPrompt()) {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute<void>(
@@ -249,6 +268,7 @@ class _EntryPipelineState extends State<EntryPipeline>
   void _toOffline() {
     if (_routed || !mounted) return;
     _routed = true;
+    Insight.event('route_offline');
     Navigator.of(context).pushReplacement(
       MaterialPageRoute<void>(
         builder: (_) => NoLinkStage(

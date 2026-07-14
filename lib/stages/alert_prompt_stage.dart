@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../config/pinboard_brief.dart';
 import '../media_library.dart';
+import '../spine/insight.dart';
 import '../spine/local_stash.dart';
 import '../spine/pulse_sensor.dart';
 import '../spine/signal_dock.dart';
@@ -18,7 +19,7 @@ import 'portal_stage.dart';
 ///   - Accept + Skip are stacked (Column) so their widths match, and the
 ///     stack is placed by [Positioned(left: 0, right: 0, bottom: ...)] +
 ///     [Center] to guarantee horizontal centering in both orientations.
-class AlertPromptStage extends StatelessWidget {
+class AlertPromptStage extends StatefulWidget {
   const AlertPromptStage({
     super.key,
     required this.stash,
@@ -32,16 +33,32 @@ class AlertPromptStage extends StatelessWidget {
   final PulseSensor pulse;
   final String contentLink;
 
+  @override
+  State<AlertPromptStage> createState() => _AlertPromptStageState();
+}
+
+class _AlertPromptStageState extends State<AlertPromptStage> {
+  @override
+  void initState() {
+    super.initState();
+    Insight.screen('push_invite');
+  }
+
   Future<void> _accept(BuildContext context) async {
-    final bool granted = await dock.askPermission();
+    Insight.event('push_invite_accept');
+    final bool granted = await widget.dock.askPermission();
+    Insight.tag('notif_permission', granted ? 'granted' : 'denied');
+    Insight.event(granted ? 'push_granted' : 'push_denied');
     if (!granted) {
-      await stash.writeAlertPromptCooldown(_cooldownTarget());
+      await widget.stash.writeAlertPromptCooldown(_cooldownTarget());
     }
     if (context.mounted) _forward(context);
   }
 
   Future<void> _skip(BuildContext context) async {
-    await stash.writeAlertPromptCooldown(_cooldownTarget());
+    Insight.event('push_invite_skip');
+    Insight.tag('notif_permission', 'skipped');
+    await widget.stash.writeAlertPromptCooldown(_cooldownTarget());
     if (context.mounted) _forward(context);
   }
 
@@ -53,10 +70,10 @@ class AlertPromptStage extends StatelessWidget {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute<void>(
         builder: (_) => PortalStage(
-          link: contentLink,
-          stash: stash,
-          dock: dock,
-          pulse: pulse,
+          link: widget.contentLink,
+          stash: widget.stash,
+          dock: widget.dock,
+          pulse: widget.pulse,
         ),
       ),
     );
@@ -71,7 +88,6 @@ class AlertPromptStage extends StatelessWidget {
         ? MediaLibrary.horizontalAlerts
         : MediaLibrary.verticalAlerts;
 
-    // Buttons keep the same width so they read as a single control column.
     final double buttonWidth =
         landscape ? size.width * 0.36 : size.width * 0.68;
     final double bottom =

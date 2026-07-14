@@ -1,3 +1,4 @@
+import 'package:clarity_flutter/clarity_flutter.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -8,6 +9,7 @@ import 'config/pinboard_brief.dart';
 import 'media_library.dart';
 import 'router/entry_pipeline.dart';
 import 'services/storage.dart';
+import 'spine/insight.dart';
 import 'spine/local_stash.dart';
 import 'spine/masked_http.dart';
 import 'spine/pulse_sensor.dart';
@@ -58,12 +60,15 @@ Future<void> main() async {
   final RelayPost relay = RelayPost(stash);
   final SignalDock dock = SignalDock(stash);
 
-  runApp(PinboardApp(
-    stash: stash,
-    pulse: pulse,
-    tracker: tracker,
-    relay: relay,
-    dock: dock,
+  runApp(ClarityWidget(
+    clarityConfig: Insight.config,
+    app: PinboardApp(
+      stash: stash,
+      pulse: pulse,
+      tracker: tracker,
+      relay: relay,
+      dock: dock,
+    ),
   ));
 }
 

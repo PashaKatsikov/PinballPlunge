@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../media_library.dart';
+import '../spine/insight.dart';
 import 'neon_pill_action.dart';
 
 /// Shown when the device has no reachable connection. Uses the project's
@@ -25,8 +26,15 @@ class NoLinkStage extends StatefulWidget {
 class _NoLinkStageState extends State<NoLinkStage> {
   bool _busy = false;
 
+  @override
+  void initState() {
+    super.initState();
+    Insight.screen('offline');
+  }
+
   Future<void> _retry() async {
     if (_busy) return;
+    Insight.event('offline_retry');
     setState(() => _busy = true);
     await Future<void>.delayed(const Duration(milliseconds: 550));
     if (!mounted) return;
